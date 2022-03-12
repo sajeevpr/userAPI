@@ -166,9 +166,8 @@
     | 500       | Internal Server Error                 |
 
 ## Building
-`./gradlew build`
+`./gradlew clean build`
 
-`./gradlew installDist`
 ## Testing
 `./gradlew clean test` #integration test run with H2
 
