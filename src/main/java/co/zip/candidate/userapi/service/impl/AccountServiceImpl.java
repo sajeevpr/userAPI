@@ -1,7 +1,5 @@
 package co.zip.candidate.userapi.service.impl;
 
-import co.zip.candidate.userapi.constants.AccountType;
-import co.zip.candidate.userapi.constants.CurrencyType;
 import co.zip.candidate.userapi.constants.UserApiConstants;
 import co.zip.candidate.userapi.constants.ZipError;
 import co.zip.candidate.userapi.dao.AccountDao;

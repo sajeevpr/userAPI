@@ -45,5 +45,10 @@ dependencyManagement {
 }
 
 tasks.named('test') {
+	systemProperty "it.db", System.getProperty("it.db")
+	logger.lifecycle("Running test with it.db : " + System.getProperty("it.db"))
 	useJUnitPlatform()
+	testLogging {
+		events "PASSED", "SKIPPED", "FAILED", "STANDARD_OUT", "STANDARD_ERROR"
+	}
 }

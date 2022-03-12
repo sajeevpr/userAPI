@@ -7,6 +7,9 @@ import co.zip.candidate.userapi.model.ui.AccountRequest;
 import co.zip.candidate.userapi.model.ui.UIResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.cfg.Environment;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -14,11 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.testcontainers.containers.MySQLContainer;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -33,8 +40,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource(
 		locations = "classpath:application.properties")
-class UserApiApplicationTests //extends BaseIT
+class UserApiApplicationTests
 {
+
+	private static MySQLContainer mySQLContainer;
+
+	static {
+		String db = System.getProperty("it.db");
+		System.out.println("it.db - "+db);
+		if(db != null && db.equalsIgnoreCase("mysql")) {
+			mySQLContainer = (MySQLContainer) (new MySQLContainer("mysql:8.0")
+					.withUsername("testuser")
+					.withPassword("testpass!")
+					.withReuse(true));
+			mySQLContainer.start();
+			System.setProperty("spring.datasource.url", mySQLContainer.getJdbcUrl());
+			System.setProperty("spring.datasource.password", mySQLContainer.getPassword());
+			System.setProperty("spring.datasource.username", mySQLContainer.getUsername());
+		}
+	}
 
 	@Autowired
 	private MockMvc mvc;
@@ -52,7 +76,7 @@ class UserApiApplicationTests //extends BaseIT
 
 		ObjectMapper mapper = new ObjectMapper();
 		String requestBody = mapper.writeValueAsString(user);
-
+		System.out.println("Request Body for create User" + requestBody);
 		ResultActions result = mvc.perform(MockMvcRequestBuilders.post("/user")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(requestBody))
@@ -72,6 +96,7 @@ class UserApiApplicationTests //extends BaseIT
 				.build();
 
 		requestBody = mapper.writeValueAsString(accountRequest);
+		System.out.println("Request Body for create Account" + requestBody);
 		result = mvc.perform(MockMvcRequestBuilders.post("/account")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(requestBody))
@@ -110,7 +135,7 @@ class UserApiApplicationTests //extends BaseIT
 				.build();
 
 		requestBody = mapper.writeValueAsString(user1);
-
+		System.out.println("Request Body for create User (invalid email)" + requestBody);
 		result = mvc.perform(MockMvcRequestBuilders.post("/user")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(requestBody))
@@ -119,7 +144,7 @@ class UserApiApplicationTests //extends BaseIT
 
 		//create User exception - email already present
 		requestBody = mapper.writeValueAsString(user);
-
+		System.out.println("Request Body for create User (email exists)" + requestBody);
 		result = mvc.perform(MockMvcRequestBuilders.post("/user")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(requestBody))
@@ -149,7 +174,7 @@ class UserApiApplicationTests //extends BaseIT
 				.accountName("account2")
 				.currency(CurrencyType.AUD)
 				.build();
-
+		System.out.println("Request Body for create Account (less credit)" + requestBody);
 		requestBody = mapper.writeValueAsString(accountRequest1);
 		result = mvc.perform(MockMvcRequestBuilders.post("/account")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -168,6 +193,7 @@ class UserApiApplicationTests //extends BaseIT
 				.build();
 
 		requestBody = mapper.writeValueAsString(accountRequest2);
+		System.out.println("Request Body for create Account (invalid userId)" + requestBody);
 		result = mvc.perform(MockMvcRequestBuilders.post("/account")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(requestBody))
