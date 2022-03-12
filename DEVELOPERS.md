@@ -7,7 +7,7 @@
   * AccountTypes are ZIP_PAY or ZIP_MONEY
   * Either H2/MySQL database can be used. 
   * Integration test case can run with either H2/MySQL(test container) based on property
-  * docker-compose.yml has been given to prepare and start the DB and application container together
+  * docker-compose.yml manages three containers - mysql db, liquibase container for DB execution and application container
 * **User API**
     * **CreateUser**
         * Success Request sample

@@ -2,6 +2,7 @@ version: "3.8"
 services:
   mysql:
     image: mysql:8
+    command: mysqld --default-authentication-plugin=mysql_native_password
     restart: unless-stopped
     env_file: ./.env
     environment:
@@ -11,12 +12,22 @@ services:
       - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
     volumes:
       - db:/var/lib/mysql
-      - ./src/main/resources/data/mysql-init.sql:/docker-entrypoint-initdb.d/mysql-init.sql
-  userapi-main:
+  lobo-liquibase:
+    container_name: lobo-liquibase
     restart: on-failure
     env_file: ./.env
     depends_on:
       - mysql
+    image: kilna/liquibase-mysql
+    command: liquibase --url=jdbc:mysql://mysql:$MYSQLDB_DOCKER_PORT/userapi_db?useSSL=false --driver=com.mysql.jdbc.Driver --username=root --password=password --changeLogFile=/workspace/changelog.xml update
+    volumes:
+      - ./src/main/resources/changelog.xml:/workspace/changelog.xml
+      - ./src/main/resources/data:/workspace/data
+  userapi-main:
+    restart: on-failure
+    env_file: ./.env
+    depends_on:
+      - lobo-liquibase
     container_name: userapi-server
     build:
         context: .

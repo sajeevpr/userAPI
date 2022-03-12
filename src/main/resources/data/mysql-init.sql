@@ -1,3 +1,6 @@
+--liquibase formatted sql
+
+--changeset sajurrk:001_sql runOnChange:false failOnError:true
 
 CREATE TABLE user (
    user_id varchar(36) NOT NULL,
