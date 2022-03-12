@@ -26,7 +26,15 @@ import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class UserApiApplicationTests extends BaseIT{
+@RunWith(SpringRunner.class)
+@SpringBootTest(
+		webEnvironment = SpringBootTest.WebEnvironment.MOCK,
+		classes = UserApiApplication.class)
+@AutoConfigureMockMvc
+@TestPropertySource(
+		locations = "classpath:application.properties")
+class UserApiApplicationTests //extends BaseIT
+{
 
 	@Autowired
 	private MockMvc mvc;
