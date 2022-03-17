@@ -1,12 +1,12 @@
-# Zip Candidate User API Challenge: Kotlin
-We have a fictitious scenario where we'd like to build an API to manage Zip Pay users. We require the ability to create, get, and list users. Once we create users, we need the ability for the user to create an account.
+# User API Challenge
+We have a fictitious scenario where we'd like to build an API to manage ABC Pay users. We require the ability to create, get, and list users. Once we create users, we need the ability for the user to create an account.
 
 This should be implemented with an API and database.
 
 ## Business Requirements
 
 * Should not allow more than one user with the same email address
-* Zip Pay allows credit for up to $1000, so if `monthly salary - monthly expenses` is less than $1000 we should not create an account for the user and return an error
+* ABC Pay allows credit for up to $1000, so if `monthly salary - monthly expenses` is less than $1000 we should not create an account for the user and return an error
 
 ## Tech Requirements
 

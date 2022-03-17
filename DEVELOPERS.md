@@ -4,7 +4,7 @@
   * User is uniquely identified using email and account by account type and name
   * UUID has been used for the primary key of User and Account tables. This helps in future sharding of the database if required
   * OneToMany relation established from User to Account and ManyToOne relation established from Account to User
-  * AccountTypes are ZIP_PAY or ZIP_MONEY
+  * AccountTypes are ABC_PAY or ABC_MONEY
   * Either H2/MySQL database can be used. 
   * Integration test case can run with either H2/MySQL(test container) based on property
   * docker-compose.yml manages three containers - mysql db, liquibase container for DB execution and application container
@@ -102,7 +102,7 @@
           curl -X POST --header "Content-Type: application/json"  http://localhost:8080/account -d 
           '
           {
-          "accountType":"ZIP_MONEY",
+          "accountType":"ABC_MONEY",
           "accountName":"Savings4",
           "currency":"AUD",
           "userId":"580b7653-b2f7-4bdd-bdce-34f4e0343fa4"
@@ -132,7 +132,7 @@
           "resultList":[
           {
           "id":"f8c2647f-8501-45c2-a6ba-a89483a81f61",
-          "accountType":"ZIP_MONEY",
+          "accountType":"ABC_MONEY",
           "accountName":"account1",
           "balance":0.00,
           "currency":"AUD",
